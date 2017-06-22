@@ -25,12 +25,22 @@
 conda install -c r r-essentials
 ```
 
-### R packages in Python (Optoinal)
+### R packages in Python (Optional)
 Most required packages such as numpy, pandas, scipy, and matplotlib come with the Anaconda installation. However, to use R packages in python you need to install rpy2 and statsmodels packages. You can use the ```conda``` install command in command-line (or the Anaconda prompt in Windows):
 ```
 conda install rpy2
 conda install statsmodels
 ```
+
+## Starting up Jupyter
+Open Jupyter notebook: In command prompt or the Anaconda prompt in Windows, navigate to where you downloaded this repository and type in
+
+```
+jupyter notebook
+```
+
+This should open up Jupyter on your browser from the directory that you navigated to above. On the main page of the respository on Jupyter, click on **New** on the top right corner and under *Notebooks* select the Kernel (R or Python).
+
 
 * Note about packages for R in python:
 ![R Packages in python](images/rpython.png)
@@ -53,3 +63,5 @@ robjects.globalenv['y'] = robjectss.FloatVector(y)
 * R formlas are passed using ```r.formula('formula')
     - Note different R packages behave differently. E.g:
         + ```robjects.r.lm()``` does not need ```r.formula()``` in the argument, where as ```nlme.gls()``` does. The return summary of robjects.r and nlme functions are also different.
+
+## 
