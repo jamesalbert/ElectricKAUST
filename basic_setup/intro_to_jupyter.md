@@ -33,20 +33,5 @@ conda install statsmodels
 ```
 
 * Note about packages for R in python:
-```%matplotlib inline```
-```
-# Import required Python Packages
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
-
-import rpy2.robjects as robjs
-import rpy2.robjects.packages import importr
-from IPython.display import display
-
-# Important R packages in Python
-r = robjs.r
-nlme = importr('nlme')
-stats = importr('stats')
-```
+![R Packages in python](images/rpython.png)
 
