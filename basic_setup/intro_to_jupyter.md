@@ -35,3 +35,21 @@ conda install statsmodels
 * Note about packages for R in python:
 ![R Packages in python](images/rpython.png)
 
+## Using R in python: rpy2
+* Call R functions directly from Ptyon
+* Import R packages with ```importr``` from ```rpy2.robjects.packages```. E.g
+    - ```nlme = importr('nlme')```.
+* Follow Python syntax for calling functions
+    - ```gls()``` -> ```nlme.gls()```.
+    - Note dots in names become underscores in Python
+        + ```arima.sim()``` -> ```stats.arima_sim()```.
+* Function inputs need to be R objects!
+
+## R functions in Python
+* Convert variables to R objects and pass to R environment:
+```
+robjects.globalenv['y'] = robjectss.FloatVector(y)
+```
+* R formlas are passed using ```r.formula('formula')
+    - Note different R packages behave differently. E.g:
+        + ```robjects.r.lm()``` does not need ```r.formula()``` in the argument, where as ```nlme.gls()``` does. The return summary of robjects.r and nlme functions are also different.
