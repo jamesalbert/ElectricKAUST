@@ -25,6 +25,13 @@
 conda install -c r r-essentials
 ```
 
+## Useful R packages (R users only)
+If you don't already have the following packages, then at the R command line, type
+
+```
+install.packages(c('nlme', 'fields', 'gstat', 'sp'))
+```
+
 ## R packages in Python (Optional)
 Most required packages such as numpy, pandas, scipy, and matplotlib come with the Anaconda installation. However, to use R packages in python you need to install rpy2 and statsmodels packages. You can use the ```conda``` install command in command-line (or the Anaconda prompt in Windows):
 ```
