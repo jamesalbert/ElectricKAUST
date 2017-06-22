@@ -1,0 +1,6 @@
+name: electrickaust
+dependencies:
+- python=3
+- anaconda
+- statsmodels
+- rpy2
