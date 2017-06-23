@@ -16,8 +16,11 @@ sys.path.insert(1, os.path.join(os.path.pardir, os.getcwd()))
 
 YESTERDAY = datetime.date.today() - datetime.timedelta(days=1)
 NOW = '{:%Y-%m-%d-%H:%M:%S}'.format(datetime.datetime.now())
-LOGDIR = path.join('data/jpn_weather/', NOW)
 
+PATH = os.path.join('data/jpn_weather')
+if not os.path.exists(PATH):
+    os.makedirs(PATH)
+LOGDIR = os.path.join(PATH, '{}.csv'.format(NOW))
 
 STATES = ['Ibaraki',
           'Tochigi',
