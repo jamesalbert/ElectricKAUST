@@ -88,12 +88,13 @@ def get_coords(cline):
 
 def parse(hr, r, *params):
     cols = params[:-1] + (f'{YESTERDAY} {hr+1}:00:00',)
-    for b in r.findAll(class_='block'):
-        val = b.get_text()
-        if not params[-1]:
-            cols += ('NaN', val, 'NaN', 'NaN', 'NaN')
-            break
-        cols += (val.replace('\xa0', 'NaN'),)
+    if not params[-1]:
+        cols += ('NaN', r.find(class_='block').get_text(),
+                 'NaN', 'NaN', 'NaN')
+    else:
+        cols += tuple(
+            b.get_text().replace('\xa0', 'NaN')
+            for b in r.findAll(class_='block'))
     return cols
 
 
