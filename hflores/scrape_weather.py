@@ -57,11 +57,11 @@ def get_states(url):
 
     # Strip unnecessary './' from map link
     for state, link in hrefs.items():
-        hrefs[state] = re.sub(r'./', '', link)
+        hrefs[state] = link.replace('./', str())
 
     # Append state map link to root url
     for state, link in hrefs.items():
-        hrefs[state] = re.sub(r'index.html', link, url)
+        hrefs[state] = url.replace('index.html', link)
     return hrefs
 
 
@@ -71,7 +71,7 @@ def get_areas(url):
 
     # Get yesterdays data for full 24 hour
     for area, link in hrefs.items():
-        hrefs[area] = re.sub(r'today', 'yesterday', link)
+        hrefs[area] = link.replace('today', 'yesterday')
 
     # Append area link to root url
     for area, link in hrefs.items():
@@ -82,7 +82,7 @@ def get_areas(url):
 def get_coords(cline):
     cline = re.sub(r'\s+', '', cline[0]).split(';')
     cline = [re.sub(r'.*:', '', c) for c in cline]
-    cline[-1] = re.sub(r'm', '', cline[-1])
+    cline[-1] = cline[-1].replace('m', '')
     return (parse_dms(cline[0]), parse_dms(cline[1]), cline[-1])
 
 
@@ -101,24 +101,20 @@ def get_data(url, state, city):
     # Create data from rows
     has_temp = False
     data = []
-    for hr, r in enumerate(rows):
-        if hr == 0:  # Check for temp field
-            field = r.findAll(class_='block')[0]
-            has_temp = field.get_text() == 'Temperature'
-        elif hr == 1:
-            continue
-        else:  # Collect data
-            stamp = '{} {}:00:00'.format(YESTERDAY, str(hr - 1))
-            cols = [state, city, lat, lon, alt, stamp]
+    r = rows[0]
+    field = r.find(class_='block')
+    has_temp = field.get_text() == 'Temperature'
+    for hr, r in enumerate(rows[2:]):
+        stamp = f'{YESTERDAY} {hr+1}:00:00'
+        cols = [state, city, lat, lon, alt, stamp]
 
-            if not has_temp:
-                val = r.findAll(class_='block')[0].get_text()
-                cols += ['NaN', val, 'NaN', 'NaN', 'NaN']
-            else:
-                for b in r.findAll(class_='block'):
-                    val = b.get_text()
-                    cols += [val] if val != '\xa0' else ['NaN']
-            data.append(cols)
+        if not has_temp:  # if it doesn't have temp, there's only 1 column?
+            val = r.find(class_='block').get_text()
+            cols += ['NaN', val, 'NaN', 'NaN', 'NaN']
+        else:
+            cols += [b.get_text().replace('\xa0', 'NaN')
+                     for b in r.findAll(class_='block')]
+        data.append(cols)
     return data
 
 
