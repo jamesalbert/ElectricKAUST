@@ -101,8 +101,7 @@ def get_data(url, state, city):
     # Create data from rows
     has_temp = False
     data = []
-    r = rows[0]
-    field = r.find(class_='block')
+    field = rows[0].find(class_='block')
     has_temp = field.get_text() == 'Temperature'
     for hr, r in enumerate(rows[2:]):
         stamp = f'{YESTERDAY} {hr+1}:00:00'
