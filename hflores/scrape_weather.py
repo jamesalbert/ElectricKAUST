@@ -105,7 +105,7 @@ def get_data(url, state, city):
 
     # Get lat, lon, and altitude from page
     cline = soup(text=re.compile(r'Latitude'))
-    lat, lon, alt = get_coords(cline)
+    params = (state, city) + get_coords(cline)
 
     # Extract table
     table = soup.find('table', id='tbl_list')
@@ -114,9 +114,8 @@ def get_data(url, state, city):
     # Create data from rows
     has_temp = False
     field = rows[0].find(class_='block')
-    has_temp = field.get_text() == 'Temperature'
-    return map(lambda row: parse(
-        *row, state, city, lat, lon, alt, has_temp), enumerate(rows[2:]))
+    params += (field.get_text() == 'Temperature',)
+    return map(lambda row: parse(*row, *params), enumerate(rows[2:]))
 
 
 if __name__ == '__main__':
