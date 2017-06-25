@@ -112,7 +112,6 @@ def get_data(url, state, city):
     rows = [row for row in table if row != '\n']
 
     # Create data from rows
-    has_temp = False
     field = rows[0].find(class_='block')
     params += (field.get_text() == 'Temperature',)
     return map(lambda row: parse(*row, *params), enumerate(rows[2:]))
