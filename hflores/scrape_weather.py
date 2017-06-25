@@ -86,6 +86,19 @@ def get_coords(cline):
     return (parse_dms(cline[0]), parse_dms(cline[1]), cline[-1])
 
 
+def parse(hr, r, state, city, lat, lon, alt, has_temp):
+    stamp = f'{YESTERDAY} {hr+1}:00:00'
+    cols = [state, city, lat, lon, alt, stamp]
+
+    if not has_temp:
+        val = r.find(class_='block').get_text()
+        cols += ['NaN', val, 'NaN', 'NaN', 'NaN']
+    else:
+        cols += [b.get_text().replace('\xa0', 'NaN')
+                 for b in r.findAll(class_='block')]
+    return cols
+
+
 # TODO: refactor and more robust to states/cities that have different fields
 def get_data(url, state, city):
     soup = get_soup(url)
@@ -100,21 +113,10 @@ def get_data(url, state, city):
 
     # Create data from rows
     has_temp = False
-    data = []
     field = rows[0].find(class_='block')
     has_temp = field.get_text() == 'Temperature'
-    for hr, r in enumerate(rows[2:]):
-        stamp = f'{YESTERDAY} {hr+1}:00:00'
-        cols = [state, city, lat, lon, alt, stamp]
-
-        if not has_temp:  # if it doesn't have temp, there's only 1 column?
-            val = r.find(class_='block').get_text()
-            cols += ['NaN', val, 'NaN', 'NaN', 'NaN']
-        else:
-            cols += [b.get_text().replace('\xa0', 'NaN')
-                     for b in r.findAll(class_='block')]
-        data.append(cols)
-    return data
+    return map(lambda row: parse(
+        *row, state, city, lat, lon, alt, has_temp), enumerate(rows[2:]))
 
 
 if __name__ == '__main__':
