@@ -86,16 +86,14 @@ def get_coords(cline):
     return (parse_dms(cline[0]), parse_dms(cline[1]), cline[-1])
 
 
-def parse(hr, r, state, city, lat, lon, alt, has_temp):
-    stamp = f'{YESTERDAY} {hr+1}:00:00'
-    cols = [state, city, lat, lon, alt, stamp]
-
-    if not has_temp:
-        val = r.find(class_='block').get_text()
-        cols += ['NaN', val, 'NaN', 'NaN', 'NaN']
-    else:
-        cols += [b.get_text().replace('\xa0', 'NaN')
-                 for b in r.findAll(class_='block')]
+def parse(hr, r, *params):
+    cols = params[:-1] + (f'{YESTERDAY} {hr+1}:00:00',)
+    for b in r.findAll(class_='block'):
+        val = b.get_text()
+        if not params[-1]:
+            cols += ('NaN', val, 'NaN', 'NaN', 'NaN')
+            break
+        cols += (val.replace('\xa0', 'NaN'),)
     return cols
 
 
